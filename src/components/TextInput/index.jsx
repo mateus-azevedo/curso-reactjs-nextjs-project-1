@@ -10,4 +10,4 @@ export const TextInput = ({ searchValue, handleChange }) => {
       placeholder="Type your search"
     />
   );
-}
+};
