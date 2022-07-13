@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
+import { useReactToPrint } from 'react-to-print';
 
 import './styles.css';
 
@@ -47,21 +48,30 @@ export const Home = () => {
       })
     : posts;
 
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    onAfterPrint: () => console.log('Efetuei uma ação após a impressão'),
+  });
+
   return (
-    <section className="container">
-      <div className="search-container">
-        {!!searchValue && <h1>Search value: {searchValue}</h1>}
+    <>
+      <section className="container" ref={componentRef}>
+        <div className="search-container">
+          {!!searchValue && <h1>Search value: {searchValue}</h1>}
 
-        <TextInput searchValue={searchValue} handleChange={handleChange} />
-      </div>
+          <TextInput searchValue={searchValue} handleChange={handleChange} />
+        </div>
 
-      {filteredPosts.length > 0 && <Posts posts={filteredPosts} />}
+        {filteredPosts.length > 0 && <Posts posts={filteredPosts} />}
 
-      {filteredPosts.length === 0 && <p>Não existem posts =(</p>}
+        {filteredPosts.length === 0 && <p>Não existem posts =(</p>}
 
-      <div className="button-container">
-        {!searchValue && <Button text="Load more posts" onClick={loadMorePosts} disabled={noMorePosts} />}
-      </div>
-    </section>
+        <div className="button-container">
+          {!searchValue && <Button text="Load more posts" onClick={loadMorePosts} disabled={noMorePosts} />}
+        </div>
+      </section>
+      <button onClick={handlePrint}>Print this out!</button>
+    </>
   );
 };
